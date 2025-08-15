@@ -6,12 +6,11 @@ exports.getAllCandidates = async (req, res) => {
         const allCandidatesResult = await db.query(`
             SELECT COUNT(*) as total FROM z6.KandidatOsnovno
         `);
-        console.log('Total candidates in database:', allCandidatesResult.rows[0][0]);
 
         const membersResult = await db.query(`
             SELECT COUNT(*) as total FROM z6.ClanZadruge
         `);
-        console.log('Total members in database:', membersResult.rows[0][0]);
+
         
         const result = await db.query(`
             SELECT 
@@ -32,8 +31,6 @@ exports.getAllCandidates = async (req, res) => {
             ORDER BY k.KandidatID
         `);
         
-        console.log('Available candidates (not members):', result.rows.length);
-        console.log('Candidate IDs returned:', result.rows.map(row => row[0]));
         res.json(result.rows);
     } catch (err) {
         console.error('Error in getAllCandidates:', err.message);
@@ -85,7 +82,7 @@ exports.searchCandidates = async (req, res) => {
 
             const candidateWithDetails = {
                 ...candidate,
-                0: candidate[0], // Array format za kompatibilnost
+                0: candidate[0], 
                 1: candidate[1],
                 2: candidate[2],
                 3: candidate[3],
@@ -120,7 +117,6 @@ exports.searchCandidates = async (req, res) => {
 
 exports.getCandidateById = async (req, res) => {
     const id = req.params.id;
-    console.log('getCandidateById called with ID:', id);
     
     try {
 
@@ -182,7 +178,7 @@ exports.getCandidateById = async (req, res) => {
             ime: candidate[2], 
             prezime: candidate[3],
             datumRodjenja: candidate[4],
-            telefon: candidate[5], // mobilniTelefon kao telefon
+            telefon: candidate[5], 
             email: candidate[7],
             brojLicneKarte: candidate[8],
             lbo: candidate[9],
@@ -235,7 +231,7 @@ exports.createCandidate = async (req, res) => {
             prezime: candidateData.prezime,
             datumRodjenja: candidateData.datumRodjenja,
             mobilniTelefon: candidateData.telefon || null,
-            fiksniTelefon: null, // CandidateForm ne koristi fiksni telefon
+            fiksniTelefon: null, 
             email: candidateData.email || null,
             brojLicneKarte: candidateData.brojLicneKarte || null,
             lbo: candidateData.lbo || null

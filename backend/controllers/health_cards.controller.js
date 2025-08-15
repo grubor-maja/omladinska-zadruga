@@ -1,5 +1,7 @@
 const db = require('../db/db');
 
+// nije vise potreban fajl
+
 exports.getAllHealthCards = async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM ZdravstvenaLegitimacija');

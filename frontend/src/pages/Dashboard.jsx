@@ -34,10 +34,10 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const [candidatesRes, requestsRes, institutionsRes, languagesRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/candidates', axiosConfig), // Postojeći endpoint
+        axios.get('http://localhost:3000/api/candidates', axiosConfig), 
         axios.get('http://localhost:3000/api/worker-requests', axiosConfig),
         axios.get('http://localhost:3000/api/institutions', axiosConfig),
-        axios.get('http://localhost:3000/api/languages', axiosConfig) // Ispravka: languages umesto foreign-languages
+        axios.get('http://localhost:3000/api/languages', axiosConfig) 
       ]);
       
       setCandidates(candidatesRes.data);

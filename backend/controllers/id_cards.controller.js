@@ -1,5 +1,7 @@
 const db = require('../db/db');
 
+// nije vise potreban fajl
+
 exports.getAllIDCards = async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM Legitimacija');

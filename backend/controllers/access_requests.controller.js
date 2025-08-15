@@ -1,5 +1,7 @@
 const db = require('../db/db');
 
+
+
 exports.getAllRequests = async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM ZahtevZaPristupanje');

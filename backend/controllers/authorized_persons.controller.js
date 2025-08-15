@@ -10,12 +10,12 @@ exports.getAllAuthorizedPersons = async (req, res) => {
 };
 
 exports.createAuthorizedPerson = async (req, res) => {
-    const { liceID, ime, prezime, funkcija } = req.body;
+    const { liceID, ime, prezime } = req.body;
     try {
         await db.query(
-            `INSERT INTO OvlascenoLice (LiceID, Ime, Prezime, Funkcija)
-             VALUES (:id, :ime, :prezime, :funkcija)`,
-            [liceID, ime, prezime, funkcija],
+            `INSERT INTO OvlascenoLice (LiceID, Ime, Prezime)
+             VALUES (:id, :ime, :prezime)`,
+            [liceID, ime, prezime],
             { autoCommit: true }
         );
         res.status(201).json({ message: 'Authorized person created' });
@@ -26,12 +26,12 @@ exports.createAuthorizedPerson = async (req, res) => {
 
 exports.updateAuthorizedPerson = async (req, res) => {
     const id = req.params.id;
-    const { ime, prezime, funkcija } = req.body;
+    const { ime, prezime } = req.body;
     try {
         await db.query(
-            `UPDATE OvlascenoLice SET Ime = :ime, Prezime = :prezime, Funkcija = :funkcija
+            `UPDATE OvlascenoLice SET Ime = :ime, Prezime = :prezime
              WHERE LiceID = :id`,
-            [ime, prezime, funkcija, id],
+            [ime, prezime, id],
             { autoCommit: true }
         );
         res.json({ message: 'Authorized person updated' });

@@ -101,7 +101,7 @@ const CandidateForm = ({ token, onSuccess, candidateToEdit = null }) => {
         email: data.email || '',
         brojLicneKarte: data.brojLicneKarte || '',
         lbo: data.lbo || '',
-        imeRoditelja: '' // Ovo se ne čuva u bazi za sada
+        imeRoditelja: '' 
       });
 
       if (data.education) {

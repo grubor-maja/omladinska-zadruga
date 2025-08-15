@@ -6,17 +6,7 @@ exports.createMemberWithData = async (req, res) => {
     try {
         const { kandidatID, parentConsent, parent, authorizedPerson, accessDeclaration, biography, languageSkills } = req.body;
         
-        console.log('=== CREATING MEMBER WITH DATA ===');
-        console.log('kandidatID:', kandidatID);
-        console.log('parentConsent:', parentConsent);
-        console.log('parent:', parent);
-        console.log('authorizedPerson:', authorizedPerson);
-        console.log('biography:', biography);
-        console.log('languageSkills received:', JSON.stringify(languageSkills, null, 2));
-        console.log('languageSkills type:', typeof languageSkills);
-        console.log('languageSkills is array:', Array.isArray(languageSkills));
-        console.log('languageSkills length:', languageSkills ? languageSkills.length : 'undefined');
-        
+
         connection = await db.getConnection();
 
         const candidateCheck = await connection.execute(

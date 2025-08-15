@@ -15,7 +15,8 @@ const CandidateForm = ({ token, onSuccess, candidateToEdit = null }) => {
     email: '',
     brojLicneKarte: '',
     lbo: '',
-    imeRoditelja: ''  // Jedan roditelj u osnovnim podacima
+    imeRoditelja: ''  
+  
   });
 
   const [validationErrors, setValidationErrors] = useState({});
@@ -112,7 +113,7 @@ const CandidateForm = ({ token, onSuccess, candidateToEdit = null }) => {
   };
 
   const validateEmail = (email) => {
-    if (!email) return true; // Email nije obavezan
+    if (!email) return true; 
     const emailRegex = /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
@@ -123,13 +124,13 @@ const CandidateForm = ({ token, onSuccess, candidateToEdit = null }) => {
   };
 
   const validateLicnaKarta = (broj) => {
-    if (!broj) return false; // Obavezno polje
+    if (!broj) return false; 
     const licnaRegex = /^[0-9]{9}$/;
     return licnaRegex.test(broj);
   };
 
   const validateLBO = (lbo) => {
-    if (!lbo) return false; // Obavezno polje
+    if (!lbo) return false; 
     const lboRegex = /^[0-9]{11}$/;
     return lboRegex.test(lbo);
   };
