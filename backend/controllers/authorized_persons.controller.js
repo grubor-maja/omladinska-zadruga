@@ -13,7 +13,7 @@ exports.createAuthorizedPerson = async (req, res) => {
     const { liceID, ime, prezime } = req.body;
     try {
         await db.query(
-            `INSERT INTO OvlascenoLice (LiceID, Ime, Prezime)
+            `INSERT INTO OvlascenoLice (OvlascenoLiceID, Ime, Prezime)
              VALUES (:id, :ime, :prezime)`,
             [liceID, ime, prezime],
             { autoCommit: true }
@@ -43,7 +43,7 @@ exports.updateAuthorizedPerson = async (req, res) => {
 exports.deleteAuthorizedPerson = async (req, res) => {
     const id = req.params.id;
     try {
-        await db.query('DELETE FROM OvlascenoLice WHERE LiceID = :id', [id], { autoCommit: true });
+        await db.query('DELETE FROM OvlascenoLice WHERE OvlascenoLiceID = :id', [id], { autoCommit: true });
         res.json({ message: 'Authorized person deleted' });
     } catch (err) {
         res.status(500).json({ error: err.message });

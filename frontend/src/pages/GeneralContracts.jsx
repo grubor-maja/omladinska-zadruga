@@ -259,8 +259,8 @@ const ContractModal = ({ show, onHide, contract, employees, companies, onSave })
       if (contract) {
 
           const updateData = {
-            datumPotpisivanja: contract.datumPotpisivanja,          // već je 'YYYY-MM-DD'
-            datumVazenja: formData.datumVazenja || null,            // prazno => null
+            datumPotpisivanja: contract.datumPotpisivanja,       
+            datumVazenja: formData.datumVazenja || null,            
             statusUgovora: formData.statusUgovora,
             zaposleniId: 1,
             pib: formData.pib

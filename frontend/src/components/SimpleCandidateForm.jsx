@@ -197,8 +197,8 @@ const SimpleCandidateForm = ({ token, onSuccess, onCancel, candidateId }) => {
           prezime:        row.prezime || '',
           datumRodjenja:  row.datumRodjenja ? new Date(row.datumRodjenja).toISOString().slice(0, 10) : '',
           email:          row.email || '',
-          mobilniTelefon: row.telefon || '', // backend vraća kao 'telefon'
-          fiksniTelefon:  '', // ne koristimo fiksni telefon
+          mobilniTelefon: row.telefon || '', 
+          fiksniTelefon:  '', 
           brojLicneKarte: row.brojLicneKarte || '',
           lbo:            row.lbo || ''
         });

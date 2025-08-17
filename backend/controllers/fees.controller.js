@@ -85,8 +85,6 @@ exports.createFee = async (req, res) => {
     `;
     const params = { clanZadrugeID, datumUplate, iznos: amount };
 
-    console.log('createFee: executing SQL', sql);
-    console.log('createFee: params', params);
 
     const result = await db.query(sql, params, { autoCommit: true });
     console.log('createFee: execute result', result);

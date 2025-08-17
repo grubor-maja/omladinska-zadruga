@@ -69,16 +69,7 @@ exports.searchCandidates = async (req, res) => {
                 WHERE o.KandidatID = :id
             `, [candidateId]);
 
-            const languagesResult = await db.query(`
-                SELECT zj.*, sj.NazivJezika 
-                FROM z6.ZnanjeJezika zj 
-                LEFT JOIN z6.StraniJezik sj ON zj.StraniJezikID = sj.StraniJezikID 
-                WHERE zj.BiografijaID IN (
-                    SELECT b.BiografijaID FROM z6.Biografija b 
-                    LEFT JOIN z6.ZahtevZaPristupanje z ON b.ClanskiBroj = z.ClanskiBroj 
-                    WHERE z.KandidatID = :id
-                )
-            `, [candidateId]);
+            const languagesResult = { rows: [] }; 
 
             const candidateWithDetails = {
                 ...candidate,
@@ -161,16 +152,7 @@ exports.getCandidateById = async (req, res) => {
             WHERE o.KandidatID = :id
         `, [id]);
 
-        const languagesResult = await db.query(`
-            SELECT zj.*, sj.NazivJezika 
-            FROM z6.ZnanjeJezika zj 
-            LEFT JOIN z6.StraniJezik sj ON zj.StraniJezikID = sj.StraniJezikID 
-            WHERE zj.BiografijaID IN (
-                SELECT b.BiografijaID FROM z6.Biografija b 
-                LEFT JOIN z6.ZahtevZaPristupanje z ON b.ClanskiBroj = z.ClanskiBroj 
-                WHERE z.KandidatID = :id
-            )
-        `, [id]);
+        const languagesResult = { rows: [] }; 
 
         const response = {
 
@@ -214,11 +196,6 @@ exports.createCandidate = async (req, res) => {
     
     try {
         const candidateData = req.body;
-        
-        console.log('Creating candidate with data:', JSON.stringify(candidateData, null, 2));
-        console.log('BrojLicneKarte:', candidateData.brojLicneKarte);
-        console.log('LBO:', candidateData.lbo);
-
         const candidateSQL = `
             INSERT INTO KandidatOsnovno (JMBG, Ime, Prezime, DatumRodjenja, KontaktPodaci, BrojLicneKarte, LBO)
             VALUES (:jmbg, :ime, :prezime, TO_DATE(:datumRodjenja, 'YYYY-MM-DD'), 
@@ -273,56 +250,6 @@ exports.createCandidate = async (req, res) => {
                 stepenStudija: candidateData.education.stepenStudija || 'N/A',
                 zvanje: candidateData.education.zvanje || 'N/A'
             }, { autoCommit: false });
-        }
-
-        if (candidateData.languages && Array.isArray(candidateData.languages) && candidateData.languages.length > 0) {
-
-            let biografijaID;
-            try {
-
-                const biografijaResult = await connection.execute(`
-                    SELECT b.BiografijaID FROM z6.Biografija b
-                    LEFT JOIN z6.ZahtevZaPristupanje z ON b.ClanskiBroj = z.ClanskiBroj
-                    WHERE z.KandidatID = :kandidatID
-                `, { kandidatID: candidateID });
-
-                if (biografijaResult.rows.length > 0) {
-                    biografijaID = biografijaResult.rows[0][0];
-                } else {
-
-                    await connection.execute(`
-                        INSERT INTO z6.Biografija (ClanskiBroj, StatusZaposlenja)
-                        VALUES (biografija_seq.NEXTVAL, 'Nezaposlen')
-                    `, {}, { autoCommit: false });
-
-                    const newBiografijaResult = await connection.execute(`
-                        SELECT biografija_seq.CURRVAL FROM DUAL
-                    `);
-                    biografijaID = newBiografijaResult.rows[0][0];
-
-                    await connection.execute(`
-                        INSERT INTO z6.ZahtevZaPristupanje (KandidatID, ClanskiBroj, DatumZahteva, Status)
-                        VALUES (:kandidatID, :clanskiBroj, SYSDATE, 'na_cekanju')
-                    `, { 
-                        kandidatID: candidateID, 
-                        clanskiBroj: biografijaID 
-                    }, { autoCommit: false });
-                }
-
-                for (const lang of candidateData.languages) {
-                    await connection.execute(`
-                        INSERT INTO z6.ZnanjeJezika (BiografijaID, StraniJezikID, NivoZnanja)
-                        VALUES (:biografijaID, :straniJezikID, :nivoZnanja)
-                    `, {
-                        biografijaID: biografijaID,
-                        straniJezikID: lang.straniJezikID,
-                        nivoZnanja: lang.nivoZnanja
-                    }, { autoCommit: false });
-                }
-            } catch (err) {
-                console.error('Error with languages:', err);
-
-            }
         }
 
         await connection.commit();
@@ -423,41 +350,6 @@ exports.updateCandidate = async (req, res) => {
             }, { autoCommit: false });
         }
 
-        if (candidateData.languages && Array.isArray(candidateData.languages)) {
-
-            await connection.execute(`
-                DELETE FROM z6.ZnanjeJezika 
-                WHERE BiografijaID IN (
-                    SELECT b.BiografijaID FROM z6.Biografija b
-                    LEFT JOIN z6.ZahtevZaPristupanje z ON b.ClanskiBroj = z.ClanskiBroj
-                    WHERE z.KandidatID = :id
-                )
-            `, { id: id }, { autoCommit: false });
-
-            if (candidateData.languages.length > 0) {
-
-                const biografijaResult = await connection.execute(`
-                    SELECT b.BiografijaID FROM z6.Biografija b
-                    LEFT JOIN z6.ZahtevZaPristupanje z ON b.ClanskiBroj = z.ClanskiBroj
-                    WHERE z.KandidatID = :id
-                `, { id: id });
-
-                if (biografijaResult.rows.length > 0) {
-                    const biografijaID = biografijaResult.rows[0][0];
-
-                    for (const lang of candidateData.languages) {
-                        await connection.execute(`
-                            INSERT INTO z6.ZnanjeJezika (BiografijaID, StraniJezikID, NivoZnanja)
-                            VALUES (:biografijaID, :straniJezikID, :nivoZnanja)
-                        `, {
-                            biografijaID: biografijaID,
-                            straniJezikID: lang.straniJezikID,
-                            nivoZnanja: lang.nivoZnanja
-                        }, { autoCommit: false });
-                    }
-                }
-            }
-        }
 
         await connection.commit();
         

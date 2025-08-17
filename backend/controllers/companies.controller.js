@@ -83,7 +83,7 @@ exports.createCompanyWithContract = async (req, res) => {
 
     await conn.execute(
       `INSERT INTO z6.GeneralniUgovor (UgovorPodaci, ZaposleniID, PIB)
-       VALUES (z6.obj_ugovor(TRUNC(SYSDATE), ADD_MONTHS(TRUNC(SYSDATE), 12), 'Aktivan'), :zaposleniId, :pib)`,
+       VALUES (z6.obj_ugovor(TO_DATE(TO_CHAR(SYSDATE, 'DD.MM.YYYY'), 'DD.MM.YYYY'), ADD_MONTHS(TO_DATE(TO_CHAR(SYSDATE, 'DD.MM.YYYY'), 'DD.MM.YYYY'), 12), 'Aktivan'), :zaposleniId, :pib)`,
       { zaposleniId, pib }
     );
 
@@ -102,7 +102,7 @@ exports.createCompanyWithContract = async (req, res) => {
 };
 
 exports.updateCompany = async (req, res) => {
-    const pib = req.params.pib;
+    const pib = Number(req.params.pib); 
     const {
         naziv, mejl, mobilni, fiksni, maticniBroj,
         tekuciRacun, sifraDelatnosti, adresaID
@@ -118,20 +118,77 @@ exports.updateCompany = async (req, res) => {
             AdresaID = :adresaID
         WHERE PIB = :pib`;
 
-        await db.query(sql, [naziv, mejl, mobilni, fiksni, maticniBroj, tekuciRacun, sifraDelatnosti, adresaID, pib], { autoCommit: true });
+        const result = await db.query(sql, {
+            naziv,
+            mejl,
+            mobilni,
+            fiksni,
+            maticni: maticniBroj,
+            racun: tekuciRacun,
+            sifra: sifraDelatnosti,
+            adresaID,
+            pib
+        }, { autoCommit: true });
 
-        res.json({ message: 'Company updated' });
+        if (result.rowsAffected === 0) {
+            return res.status(404).json({ error: 'Kompanija nije pronađena' });
+        }
+
+        res.json({ message: 'Kompanija je uspešno ažurirana' });
     } catch (err) {
+        console.error('Update error:', err);
         res.status(500).json({ error: err.message });
     }
 };
 
 exports.deleteCompany = async (req, res) => {
-    const pib = req.params.pib;
+    const pib = Number(req.params.pib); 
+    
+    let conn;
     try {
-        await db.query('DELETE FROM z6.Kompanija WHERE PIB = :pib', [pib], { autoCommit: true });
-        res.json({ message: 'Company deleted' });
+        conn = await db.getConnection();
+        
+        const checkResult = await conn.execute('SELECT PIB FROM z6.Kompanija WHERE PIB = :pib', { pib });
+        
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Kompanija nije pronađena' });
+        }
+
+        const contractDeleteResult = await conn.execute(
+            'DELETE FROM z6.GeneralniUgovor WHERE PIB = :pib', 
+            { pib }, 
+            { autoCommit: false }
+        );
+
+        const requestDeleteResult = await conn.execute(
+            'DELETE FROM z6.ZahtevZaRadnicima WHERE PIB = :pib', 
+            { pib }, 
+            { autoCommit: false }
+        );
+
+        const companyDeleteResult = await conn.execute(
+            'DELETE FROM z6.Kompanija WHERE PIB = :pib', 
+            { pib }, 
+            { autoCommit: false }
+        );
+        
+        if (companyDeleteResult.rowsAffected === 0) {
+            await conn.rollback();
+            return res.status(404).json({ error: 'Brisanje kompanija nije izvršeno' });
+        }
+
+        await conn.commit();
+        res.json({ 
+            message: 'Kompanija i povezani podaci su uspešno obrisani', 
+            deletedContracts: contractDeleteResult.rowsAffected,
+            deletedRequests: requestDeleteResult.rowsAffected,
+            deletedCompany: companyDeleteResult.rowsAffected
+        });
     } catch (err) {
+        if (conn) await conn.rollback();
+        console.error('Delete error:', err);
         res.status(500).json({ error: err.message });
+    } finally {
+        if (conn) await conn.close();
     }
 };

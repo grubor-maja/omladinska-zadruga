@@ -739,10 +739,6 @@ const MemberInfoModal = ({ member, token, onHide }) => {
                             <td><strong>LBO:</strong></td>
                             <td>{memberDetails?.basic?.LBO || 'N/A'}</td>
                           </tr>
-                          <tr>
-                            <td><strong>Članstvo do:</strong></td>
-                            <td>{memberDetails?.basic?.DatumVazenja ? new Date(memberDetails.basic.DatumVazenja).toLocaleDateString('sr-RS') : 'N/A'}</td>
-                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -830,10 +826,6 @@ const MemberInfoModal = ({ member, token, onHide }) => {
                                 </td>
                               </tr>
                               <tr>
-                                <td><strong>Sklonost ka poslovima:</strong></td>
-                                <td>{memberDetails.biography.SklonostKaPoslovima || 'N/A'}</td>
-                              </tr>
-                              <tr>
                                 <td><strong>Profil/Zanimanje:</strong></td>
                                 <td>{memberDetails.biography.ProfilZanimanje || memberDetails.biography.ProfilIZanimanje || 'N/A'}</td>
                               </tr>
@@ -864,45 +856,6 @@ const MemberInfoModal = ({ member, token, onHide }) => {
                 </div>
 
                 {}
-                <div className="col-12 mb-4">
-                  <div className="card">
-                    <div className="card-header">
-                      <h6 className="mb-0"><i className="bi bi-building me-2"></i>Radno iskustvo</h6>
-                    </div>
-                    <div className="card-body">
-                      {memberDetails?.workExperience && memberDetails.workExperience.length > 0 ? (
-                        <div className="table-responsive">
-                          <table className="table table-striped table-sm">
-                            <thead>
-                              <tr>
-                                <th>Kompanija</th>
-                                <th>Pozicija</th>
-                                <th>Period</th>
-                                <th>Opis</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {memberDetails.workExperience.map((work, index) => (
-                                <tr key={index}>
-                                  <td>{work.NazivKompanije || 'N/A'}</td>
-                                  <td>{work.Pozicija || 'N/A'}</td>
-                                  <td>
-                                    {work.DatumOd ? new Date(work.DatumOd).toLocaleDateString('sr-RS') : 'N/A'} - 
-                                    {work.DatumDo ? new Date(work.DatumDo).toLocaleDateString('sr-RS') : 'trenutno'}
-                                  </td>
-                                  <td>{work.Opis || 'N/A'}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      ) : (
-                        <p className="text-muted">Nema podataka o radnom iskustvu</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
                 {}
                 <div className="col-12 mb-4">
                   <div className="card">

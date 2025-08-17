@@ -113,9 +113,7 @@ exports.createMemberWithData = async (req, res) => {
         const biografijaID = biografijaResult.outBinds.biografijaID[0];
         console.log('Created biografija with ID:', biografijaID, 'for ClanskiBroj:', clanskiBroj);
 
-        console.log('=== PROCESSING LANGUAGE SKILLS ===');
-        console.log('languageSkills:', languageSkills);
-        console.log('biografijaID:', biografijaID);
+
         
         if (languageSkills && Array.isArray(languageSkills) && languageSkills.length > 0) {
             console.log('Processing', languageSkills.length, 'language skills');
@@ -182,7 +180,7 @@ exports.createMemberWithData = async (req, res) => {
              VALUES (:clanZadrugeID, SYSDATE, :iznos)`,
             {
                 clanZadrugeID: kandidatID,
-                iznos: 500.00  // Početna članarina
+                iznos: 500.00  
             },
             { autoCommit: false }
         );

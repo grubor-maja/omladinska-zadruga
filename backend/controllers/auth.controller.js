@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// Hardcoded nalozi
 const users = [
   { username: 'admin', password: 'Crazymgirl.7', role: 'admin' },
   { username: 'marko', password: 'marko123', role: 'clerk' },
