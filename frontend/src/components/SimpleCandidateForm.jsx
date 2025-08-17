@@ -32,15 +32,15 @@ const SimpleCandidateForm = ({ token, onSuccess, onCancel, candidateId }) => {
     zvanje: ''
   });
 
-  const [educationalInstitutions, setEducationalInstitutions] = useState([]); // [{id, naziv}]
-  const [foreignLanguages, setForeignLanguages] = useState([]); // [{id, naziv}] - samo za kasnije
+  const [educationalInstitutions, setEducationalInstitutions] = useState([]); 
+  const [foreignLanguages, setForeignLanguages] = useState([]); 
   const [instLoading, setInstLoading] = useState(false);
   const [instError, setInstError] = useState('');
 
   const [addresses, setAddresses] = useState([]);
 
   const [validationErrors, setValidationErrors] = useState({});
-  const [touchedFields, setTouchedFields] = useState({}); // Prati koja polja su korisnik dodirao
+  const [touchedFields, setTouchedFields] = useState({}); 
 
   const axiosConfig = useMemo(
     () => ({ headers: { Authorization: `Bearer ${token}` } }),

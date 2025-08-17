@@ -20,7 +20,7 @@ exports.getBiographyById = async (req, res) => {
 };
 
 exports.getBiographyByCandidate = async (req, res) => {
-    const memberId = req.params.candidateId; // Ovo je zapravo član ID
+    const memberId = req.params.candidateId; 
     try {
         const result = await db.query(`
             SELECT 

@@ -998,14 +998,14 @@ const addFee = async () => {
     return;
   }
 
-  if (loading) return;          // guard
+  if (loading) return;         
   setLoading(true);
 
   try {
     const postData = {
       clanZadrugeID: member[0],
       datumUplate: newFee.datumUplate,
-      iznos: Number(newFee.iznos)   // obavezno broj!
+      iznos: Number(newFee.iznos)   
     };
 
     console.log('Saljem clanarinu bekendu sada');

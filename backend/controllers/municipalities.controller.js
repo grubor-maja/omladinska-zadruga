@@ -28,8 +28,8 @@ exports.createMunicipality = async (req, res) => {
     const { nazivOpstine, gradID } = req.body;
     try {
         const sql = `
-            INSERT INTO z6.Opstina (OpstinaID, NazivOpstine, GradID)
-            VALUES ((SELECT NVL(MAX(OpstinaID), 0) + 1 FROM z6.Opstina), :nazivOpstine, :gradID)
+            INSERT INTO z6.Opstina (NazivOpstine, GradID)
+            VALUES (:nazivOpstine, :gradID)
             RETURNING OpstinaID INTO :opstinaId
         `;
 

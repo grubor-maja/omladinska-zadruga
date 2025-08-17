@@ -81,7 +81,7 @@ const WorkerRequestModal = ({ show, onHide, request, companies, onSave }) => {
   const BROJ_OPCIJE = Array.from({ length: 50 }, (_, i) => i + 1);
 
   const addWorkerStructure = () => {
-    setWorkerStructures((prev) => [...prev, { pol: 'M', brojRadnika: '' }]); // broj obavezan => prazan dok ne izabere
+    setWorkerStructures((prev) => [...prev, { pol: 'M', brojRadnika: '' }]); 
   };
 
   const updateWorkerStructure = (index, field, value) => {
