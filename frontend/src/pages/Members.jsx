@@ -456,7 +456,6 @@ const Members = () => {
                               <th>JMBG</th>
                               <th>Telefon</th>
                               <th>Email</th>
-                              <th>Datum vazenja</th>
                               <th>Akcije</th>
                             </tr>
                           </thead>
@@ -471,7 +470,6 @@ const Members = () => {
                                   {!member[7] && !member[8] && 'N/A'}
                                 </td>
                                 <td>{member[6] || 'N/A'}</td>
-                                <td>{member[1] ? new Date(member[1]).toLocaleDateString('sr-RS') : 'N/A'}</td>
                                 <td>
                                   <div className="btn-group" role="group">
                                     <button
