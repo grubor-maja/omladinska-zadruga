@@ -92,12 +92,20 @@ exports.createMemberWithData = async (req, res) => {
         const clanskiBroj = zahtevResult.outBinds.clanskiBroj[0];
         console.log('Created zahtev with ClanskiBroj:', clanskiBroj);
 
+        
+        const kandidatResult = await connection.execute(
+            `SELECT Email FROM z6.KandidatView WHERE KandidatID = :kandidatID`,
+            { kandidatID: kandidatID }
+        );
+        const kandidatMejl = kandidatResult.rows[0] ? kandidatResult.rows[0][0] : null;
+        console.log('Kandidat mejl:', kandidatMejl);
+
         console.log('Creating Biografija...');
         const biografijaResult = await connection.execute(
             `INSERT INTO z6.Biografija (VozackaDozvola, ITVestine, ProfilIZanimanje, 
-                                       NeformalnoObrazovanje, DatumUpisa, RadniStatus, ClanskiBroj)
+                                       NeformalnoObrazovanje, DatumUpisa, RadniStatus, ClanskiBroj, Mejl)
              VALUES (:vozackaDozvola, :itVestine, :profilIZanimanje, 
-                     :neformalnoObrazovanje, SYSDATE, :radniStatus, :clanskiBroj)
+                     :neformalnoObrazovanje, SYSDATE, :radniStatus, :clanskiBroj, :mejl)
              RETURNING BiografijaID INTO :biografijaID`,
             {
                 vozackaDozvola: biography?.vozackaDozvola ? 1 : 0,
@@ -106,6 +114,7 @@ exports.createMemberWithData = async (req, res) => {
                 neformalnoObrazovanje: biography?.neformalnoObrazovanje || null,
                 radniStatus: biography?.radniStatus || 'nezaposleni',
                 clanskiBroj: clanskiBroj,
+                mejl: kandidatMejl, 
                 biografijaID: { type: db.NUMBER, dir: db.BIND_OUT }
             },
             { autoCommit: false }

@@ -1,4 +1,5 @@
 const db = require('../db/db');
+const oracledb = require('oracledb');
 
 exports.getAllMunicipalities = async (req, res) => {
     try {
@@ -27,16 +28,14 @@ exports.getMunicipalitiesByCity = async (req, res) => {
 exports.createMunicipality = async (req, res) => {
     const { nazivOpstine, gradID } = req.body;
     try {
-        const sql = `
-            INSERT INTO z6.Opstina (NazivOpstine, GradID)
-            VALUES (:nazivOpstine, :gradID)
-            RETURNING OpstinaID INTO :opstinaId
-        `;
+        const sql = `INSERT INTO z6.Opstina (OpstinaID, NazivOpstine, GradID)
+                     VALUES ((SELECT NVL(MAX(OpstinaID), 0) + 1 FROM z6.Opstina), :nazivOpstine, :gradID)
+                     RETURNING OpstinaID INTO :opstinaId`;
 
         const bindParams = {
             nazivOpstine,
             gradID,
-            opstinaId: { dir: db.BIND_OUT, type: db.NUMBER }
+            opstinaId: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
         };
 
         const result = await db.query(sql, bindParams, { autoCommit: true });

@@ -51,33 +51,32 @@ const MemberEditForm = ({ token, member, onSuccess, onCancel }) => {
       console.log('Loaded member data:', data);
 
       setBasicData({
-        ime: data.basic?.ime || member[3] || '',
-        prezime: data.basic?.prezime || member[4] || '',
-        jmbg: data.basic?.jmbg || member[2] || '',
-        email: data.basic?.email || member[6] || '',
-        mobilniTelefon: data.basic?.mobilniTelefon || member[7] || '',
-        fiksniTelefon: data.basic?.fiksniTelefon || member[8] || '',
-        brojLicneKarte: data.basic?.brojLicneKarte || '',
-        lbo: data.basic?.lbo || '',
-        datumRodjenja: data.basic?.datumRodjenja || ''
+        ime: data.basic?.Ime || member[3] || '',
+        prezime: data.basic?.Prezime || member[4] || '',
+        jmbg: data.basic?.JMBG || member[2] || '',
+        email: data.basic?.Email || member[6] || '',
+        mobilniTelefon: data.basic?.MobilniTelefon || member[7] || '',
+        fiksniTelefon: data.basic?.FiksniTelefon || member[8] || '',
+        brojLicneKarte: data.basic?.BrojLicneKarte || '',
+        lbo: data.basic?.LBO || '',
+        datumRodjenja: data.basic?.DatumRodjenja || ''
       });
 
-      if (data.biography && data.biography.length > 0) {
-        const bio = data.biography[0];
+      if (data.biography) {
         setBiography({
-          vozackaDozvola: bio.vozackaDozvola === 1 || bio.vozackaDozvola === true,
-          itVestine: bio.itVestine || '',
-          profilIZanimanje: bio.profilIZanimanje || '',
-          neformalnoObrazovanje: bio.neformalnoObrazovanje || '',
-          radniStatus: bio.radniStatus || 'nezaposleni'
+          vozackaDozvola: data.biography.VozackaDozvola === 1 || data.biography.VozackaDozvola === true,
+          itVestine: data.biography.ITVestine || '',
+          profilIZanimanje: data.biography.ProfilIZanimanje || '',
+          neformalnoObrazovanje: data.biography.NeformalnoObrazovanje || '',
+          radniStatus: data.biography.RadniStatus || 'nezaposleni'
         });
       }
 
       if (data.languages && data.languages.length > 0) {
         const mappedLanguages = data.languages.map(lang => ({
-          straniJezikID: lang.straniJezikID,
-          nivoZnanja: lang.nivoZnanja,
-          languageName: lang.nazivJezika
+          straniJezikID: lang.StraniJezikID || lang.straniJezikID,
+          nivoZnanja: lang.NivoZnanja || lang.nivoZnanja,
+          languageName: lang.NazivJezika || lang.nazivJezika
         }));
         setLanguageSkills(mappedLanguages);
       }
@@ -286,6 +285,17 @@ const MemberEditForm = ({ token, member, onSuccess, onCancel }) => {
                     className="form-control"
                     name="brojLicneKarte"
                     value={basicData.brojLicneKarte}
+                    onChange={handleBasicDataChange}
+                  />
+                </div>
+
+                <div className="col-md-6 mb-3">
+                  <label className="form-label">LBO</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="lbo"
+                    value={basicData.lbo}
                     onChange={handleBasicDataChange}
                   />
                 </div>

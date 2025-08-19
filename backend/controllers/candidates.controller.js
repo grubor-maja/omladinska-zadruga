@@ -161,6 +161,7 @@ exports.getCandidateById = async (req, res) => {
             prezime: candidate[3],
             datumRodjenja: candidate[4],
             telefon: candidate[5], 
+            fiksniTelefon: candidate[6], 
             email: candidate[7],
             brojLicneKarte: candidate[8],
             lbo: candidate[9],
@@ -208,7 +209,7 @@ exports.createCandidate = async (req, res) => {
             prezime: candidateData.prezime,
             datumRodjenja: candidateData.datumRodjenja,
             mobilniTelefon: candidateData.telefon || null,
-            fiksniTelefon: null, 
+            fiksniTelefon: candidateData.fiksniTelefon || null, 
             email: candidateData.email || null,
             brojLicneKarte: candidateData.brojLicneKarte || null,
             lbo: candidateData.lbo || null
@@ -294,7 +295,7 @@ exports.updateCandidate = async (req, res) => {
             prezime: candidateData.prezime,
             datumRodjenja: candidateData.datumRodjenja,
             mobilniTelefon: candidateData.telefon || null,
-            fiksniTelefon: null,
+            fiksniTelefon: candidateData.fiksniTelefon || null,
             email: candidateData.email || null,
             brojLicneKarte: candidateData.brojLicneKarte || null,
             lbo: candidateData.lbo || null

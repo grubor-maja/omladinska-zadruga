@@ -15,7 +15,7 @@ const CandidateForm = ({ token, onSuccess, candidateToEdit = null }) => {
     email: '',
     brojLicneKarte: '',
     lbo: '',
-    imeRoditelja: ''  // Jedan roditelj u osnovnim podacima
+    imeRoditelja: '' 
   });
 
   const [validationErrors, setValidationErrors] = useState({});

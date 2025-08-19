@@ -69,7 +69,7 @@ const GeneralContracts = () => {
       datumPotpisivanja: contract[1] ? new Date(contract[1]).toISOString().split('T')[0] : '',
       datumVazenja: contract[2] ? new Date(contract[2]).toISOString().split('T')[0] : '',
       statusUgovora: contract[3] || 'Aktivan',
-      zaposleniId: 1, // Uvek Marko 
+      zaposleniId: 1, // Uvek Marko Markovic
       pib: contract[7]
     });
     setShowModal(true);
